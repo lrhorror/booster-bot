@@ -83,12 +83,21 @@ namespace BoosterBot
 
             // Smooth drag to location:
             int steps = 50; // Number of steps for smooth movement
-            int xStep = (loc.X - card.X) / steps;
-            int yStep = (loc.Y - card.Y) / steps;
+            float xStep = (float)(loc.X - card.X) / steps;
+            float yStep = (float)(loc.Y - card.Y) / steps;
+            
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
 
             for (int i = 1; i <= steps; i++)
             {
-                Cursor.Position = new Point(card.X + (xStep * i), card.Y + (yStep * i));
+                float nextX = card.X + (xStep * i);
+                float nextY = card.Y + (yStep * i);
+
+                int absX = (int)(nextX * 65535 / screenWidth);
+                int absY = (int)(nextY * 65535 / screenHeight);
+
+                SendMouseEvent(MouseEventFlags.MOVE | MouseEventFlags.ABSOLUTE, absX, absY);
                 Thread.Sleep(rand.Next(5, 10));
             }
 

@@ -67,24 +67,36 @@ internal class SystemUtilities
         int distanceX = endX - startX;
         int distanceY = endY - startY;
 
-        // Determine the number of steps and the size of each step
-        int steps = 50;
+        // Steps for approximately 1 second duration (e.g., 100 steps * 10ms)
+        int steps = 100;
         float stepX = distanceX / (float)steps;
         float stepY = distanceY / (float)steps;
 
         // Press down the mouse button
         Cursor.Position = new Point(startX, startY);
         mouse_event((int)(MouseEventFlags.LEFTDOWN), 0, 0, 0, 0);
-        Thread.Sleep(50);  // Adjust sleep time as needed
+        Thread.Sleep(200);
+
+        int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+        int screenHeight = Screen.PrimaryScreen.Bounds.Height;
 
         // Gradually move the mouse to the end position
         for (int i = 0; i < steps; i++)
         {
-            Cursor.Position = new Point(startX + (int)(stepX * i), startY + (int)(stepY * i));
-            Thread.Sleep(1);
+            float idealX = startX + (stepX * i);
+            float idealY = startY + (stepY * i);
+
+            // Use mouse_event with ABSOLUTE | MOVE to simulate hardware movement
+            // Coordinates must be mapped to 0-65535 range
+            int absX = (int)(idealX * 65535 / screenWidth);
+            int absY = (int)(idealY * 65535 / screenHeight);
+
+            mouse_event((int)(MouseEventFlags.MOVE | MouseEventFlags.ABSOLUTE), absX, absY, 0, 0);
+            
+            Thread.Sleep(10);
         }
 
-        // Release the mouse button
+        // Release the mouse button at exact end position
         Cursor.Position = new Point(endX, endY);
         mouse_event((int)(MouseEventFlags.LEFTUP), 0, 0, 0, 0);
     }
