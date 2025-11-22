@@ -84,7 +84,7 @@ jobs:
       
     - name: Purge artifacts
       uses: kolpav/purge-artifacts-action@v1
-            if: ${{ github.repository_owner }} == 'lrhorror'
+      if: ${{ github.repository_owner }} == 'lrhorror'
       with:
         token: ${{ secrets.API_REPOSITORY_PAT }}
         expire-in: 0
