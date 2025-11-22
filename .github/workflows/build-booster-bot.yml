@@ -86,7 +86,7 @@ jobs:
       uses: kolpav/purge-artifacts-action@v1
       if: ${{ github.repository_owner }} == 'lrhorror'
       with:
-        token: ${{ secrets.API_REPOSITORY_PAT }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         expire-in: 0
       
     - name: Upload artifacts
